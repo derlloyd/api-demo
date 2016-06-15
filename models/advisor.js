@@ -12,10 +12,32 @@ var advisorSchema = mongoose.Schema({
     }
 })
 
-var Advisor = module.exports = mongoose.model('Advisor', advisorSchema);
+var Advisor = mongoose.model('Advisor', advisorSchema);
 
 // show all advisors function
-module.exports.getAdvisors = function(callback, limit) {
+function getAdvisors(callback, limit) {
     // interact with db as if in MongoDB shell
     Advisor.find(callback).limit(limit);
 };
+
+// add new advisor function
+function addAdvisor(advisorObj, callback) {
+    Advisor.create(advisorObj, callback);
+}
+
+
+// export all
+module.exports = {
+    Advisor: Advisor,
+    getAdvisors: getAdvisors,
+    addAdvisor: addAdvisor
+}
+
+
+
+// // show all advisors function
+// module.exports.getAdvisors = function(callback, limit) {
+//     // interact with db as if in MongoDB shell
+//     Advisor.find(callback).limit(limit);
+// };
+// var Advisor = module.exports = mongoose.model('Advisor', advisorSchema);
