@@ -25,21 +25,9 @@ function addEtf(etfObj, callback) {
     Etf.create(etfObj, callback);
 }
 
-
 // export all
 module.exports = {
     Eft: Etf,
     getEtfs: getEtfs,
     addEtf: addEtf
 }
-
-
-
-
-// var Etf = module.exports = mongoose.model('Etf', etfSchema);
-// show all etfs function
-// module.exports.getEtfs = function(callback, limit) {
-//     // interact with db as if in MongoDB shell
-//     Etf.find(callback).limit(limit);
-// };
-

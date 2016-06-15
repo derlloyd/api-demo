@@ -25,19 +25,9 @@ function addAdvisor(advisorObj, callback) {
     Advisor.create(advisorObj, callback);
 }
 
-
 // export all
 module.exports = {
     Advisor: Advisor,
     getAdvisors: getAdvisors,
     addAdvisor: addAdvisor
 }
-
-
-
-// // show all advisors function
-// module.exports.getAdvisors = function(callback, limit) {
-//     // interact with db as if in MongoDB shell
-//     Advisor.find(callback).limit(limit);
-// };
-// var Advisor = module.exports = mongoose.model('Advisor', advisorSchema);

@@ -30,10 +30,3 @@ and request details from one of those added products
 
 Once completed, simply send back the page you created and we will follow up with you!
 
-
-Prevent ddos
-Cache for 10 seconds
-
-Quota
-
-

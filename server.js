@@ -15,6 +15,11 @@ var Advisor = require('./models/advisor.js');
 
 // ------------------------------REQUEST HANDLERS--------------------------------------
 
+// default route
+app.get('/', function(req, res) {
+    res.send('The API is not here');
+})
+
 // Show all ETFS
 app.get('/api/etfs', function(req, res) {
     Etf.getEtfs(function(err, etfs){
@@ -62,11 +67,11 @@ app.post('/api/advisors', function(req, res) {
 })
 
 // ---------------------------Start the server--------------------------------------
-
+// recommended host and port for cloud9
 var server = app.listen(process.env.PORT, process.env.IP, function() {
     var host = server.address().address;
     var port = server.address().port;
 
-    console.log('server listening at http://%s:%s', host, port);
+    console.log('server listening at http://' + host + ':' + port);
 });
 
