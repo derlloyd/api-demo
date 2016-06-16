@@ -68,7 +68,6 @@ apiRoutes.post('/authenticate', function(req, res) {
         // return the information including token as JSON
         res.json({
           success: true,
-          message: 'Enjoy your token!',
           token: token
         });
       }   
@@ -140,7 +139,7 @@ apiRoutes.put('/efts/:id', function(req, res) {
 apiRoutes.delete('/efts/:id', function(req, res) {
     var id = req.params.id;
     // delete ...
-    res.send("delete etf not done yet");
+    res.send("delete etf not implimented yet");
 });
 
 // Show all advisors
@@ -175,7 +174,7 @@ apiRoutes.put('/advisors/:id', function(req, res) {
     var advisor = req.body;
     var id = req.params.id;
     // put...
-    res.send("update advisor not done yet");
+    res.send("update advisor not implimented yet");
 });
 
 
@@ -183,7 +182,7 @@ apiRoutes.put('/advisors/:id', function(req, res) {
 apiRoutes.delete('/advisors/:id', function(req, res) {
     var id = req.params.id;
     // delete ...
-    res.send("delete advisor not done yet");
+    res.send("delete advisor not implimented yet");
 });
 
 
