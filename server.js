@@ -1,23 +1,129 @@
 var express = require('express');
 var app = express();
 
-var mongoose = require('mongoose');
-// the name of the database is 'database'
-mongoose.connect('mongodb://localhost/database');
-var db = mongoose.connection;
-
-// folder to expose as public directory - remove this folder, web app will be independant
-// app.use(express.static(__dirname+'/client'));
-
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
+var morgan = require('morgan');  // dont need **
+
+// to verify tokens
+var jwt    = require('jsonwebtoken');
+
+var config = require('./config');
+
+var mongoose = require('mongoose');
+mongoose.connect(config.database);
+app.set('mySecret', config.secret); 
+
+var db = mongoose.connection;
+
+var User = require('./models/user.js');
 var Etf = require('./models/etf.js');
 var Advisor = require('./models/advisor.js');
 
 
 
 // ------------------------------REQUEST HANDLERS--------------------------------------
+
+app.get('/setup', function(req, res) {
+    var derek = new User({
+        name: 'Derek Lloyd',
+        password: 'password1',
+        admin: true
+    })
+    
+    console.log(derek)
+    derek.save(function(err) {
+        if (err) throw err;
+    
+        console.log("user created");
+        res.json({success: true});
+    })
+})
+
+// API ROUTES -------------------
+
+// get an instance of the router for api routes
+var apiRoutes = express.Router(); 
+
+
+apiRoutes.post('/authenticate', function(req, res) {
+
+  // find the user
+  User.findOne({
+    name: req.body.name
+  }, function(err, user) {
+
+    if (err) throw err;
+
+    if (!user) {
+      res.json({ success: false, message: 'Authentication failed. User not found.' });
+    } else if (user) {
+
+      // check if password matches, TODO use bcrypt to verify hashed
+      if (user.password != req.body.password) {
+        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+      } else {
+
+        // if user is found and password is right
+        // create a token, expires in 24 hours
+        var token = jwt.sign(user, app.get('mySecret'), {
+          expiresInMinutes: 1440
+        });
+
+        // return the information including token as JSON
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token
+        });
+      }   
+
+    }
+
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// TODO route middleware to verify a token
+
+// route to show a random message (GET /api/)
+apiRoutes.get('/', function(req, res) {
+  res.json({ message: 'Welcome to the coolest API on earth!' });
+});
+
+// route to return all users (GET /api/users)
+apiRoutes.get('/users', function(req, res) {
+  User.find({}, function(err, users) {
+    res.json(users);
+  });
+});   
+
+// apply the routes to our application with the prefix /api
+app.use('/api', apiRoutes);
+
+
+
+
+
+
+
+
+
+
+/*
 
 // default route
 app.get('/', function(req, res) {
@@ -116,7 +222,7 @@ app.delete('api/advisors/:id', function(req, res) {
     // delete ...
 });
 
-
+*/
 
 // ---------------------------Start the server--------------------------------------
 // recommended host and port for cloud9

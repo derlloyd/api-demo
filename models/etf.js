@@ -37,13 +37,13 @@ function updateEtf(id, obj, callback) {
 
 // delete an ETF
 function deleteEtf(id, callback) {
-    Etf.deleteOne(id, callback);
+    Etf.remove(id, callback);
 };
 
 
 // export all
 module.exports = {
-    Eft: Etf,
+    model: Etf,
     getEtfs: getEtfs,
     addEtf: addEtf,
     getEtf: getEtf,

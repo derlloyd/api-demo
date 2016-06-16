@@ -37,7 +37,7 @@ function updateAdvisor(id, obj, callback) {
 
 // delete an Advisor
 function deleteAdvisor(id, callback) {
-    Advisor.deleteOne(id, callback);
+    Advisor.remove(id, callback);
 };
 
 
@@ -46,7 +46,7 @@ function deleteAdvisor(id, callback) {
 
 // export all
 module.exports = {
-    Advisor: Advisor,
+    model: Advisor,
     getAdvisors: getAdvisors,
     addAdvisor: addAdvisor,
     getAdvisor: getAdvisor,
