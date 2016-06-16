@@ -25,9 +25,31 @@ function addAdvisor(advisorObj, callback) {
     Advisor.create(advisorObj, callback);
 }
 
+// show only 1 Advisor
+function getAdvisor(id, callback) {
+    Advisor.findOne(id, callback);
+};
+
+// update an Advisor
+function updateAdvisor(id, obj, callback) {
+    Advisor.updateOne(id, obj, callback);
+};
+
+// delete an Advisor
+function deleteAdvisor(id, callback) {
+    Advisor.deleteOne(id, callback);
+};
+
+
+
+
+
 // export all
 module.exports = {
     Advisor: Advisor,
     getAdvisors: getAdvisors,
-    addAdvisor: addAdvisor
+    addAdvisor: addAdvisor,
+    getAdvisor: getAdvisor,
+    updateAdvisor: updateAdvisor,
+    deleteAdvisor: deleteAdvisor
 }

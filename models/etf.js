@@ -25,9 +25,28 @@ function addEtf(etfObj, callback) {
     Etf.create(etfObj, callback);
 }
 
+// show only 1 ETF
+function getEtf(id, callback) {
+    Etf.findOne(id, callback);
+};
+
+// update an ETF
+function updateEtf(id, obj, callback) {
+    Etf.updateOne(id, obj, callback);
+};
+
+// delete an ETF
+function deleteEtf(id, callback) {
+    Etf.deleteOne(id, callback);
+};
+
+
 // export all
 module.exports = {
     Eft: Etf,
     getEtfs: getEtfs,
-    addEtf: addEtf
+    addEtf: addEtf,
+    getEtf: getEtf,
+    updateEtf: updateEtf,
+    deleteEtf: deleteEtf
 }
