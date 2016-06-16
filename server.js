@@ -25,6 +25,7 @@ var Advisor = require('./models/advisor.js');
 
 // ------------------------------REQUEST HANDLERS--------------------------------------
 
+// test using my name and password
 app.get('/setup', function(req, res) {
     var derek = new User({
         name: 'Derek Lloyd',
@@ -32,7 +33,6 @@ app.get('/setup', function(req, res) {
         admin: true
     })
     
-    console.log(derek)
     derek.save(function(err) {
         if (err) throw err;
     
@@ -41,14 +41,11 @@ app.get('/setup', function(req, res) {
     })
 })
 
-// API ROUTES -------------------
 
 // get an instance of the router for api routes
 var apiRoutes = express.Router(); 
 
-
 apiRoutes.post('/authenticate', function(req, res) {
-
   // find the user
   User.findOne({
     name: req.body.name
@@ -59,17 +56,14 @@ apiRoutes.post('/authenticate', function(req, res) {
     if (!user) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
-
       // check if password matches, TODO use bcrypt to verify hashed
+      
       if (user.password != req.body.password) {
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
-
         // if user is found and password is right
-        // create a token, expires in 24 hours
-        var token = jwt.sign(user, app.get('mySecret'), {
-          expiresInMinutes: 1440
-        });
+        // create a token
+        var token = jwt.sign(user, app.get('mySecret'));
 
         // return the information including token as JSON
         res.json({
@@ -78,30 +72,15 @@ apiRoutes.post('/authenticate', function(req, res) {
           token: token
         });
       }   
-
     }
-
   });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TODO route middleware to verify a token
+// TODO route middleware to verify token
 
 // route to show a random message (GET /api/)
 apiRoutes.get('/', function(req, res) {
-  res.json({ message: 'Welcome to the coolest API on earth!' });
+  res.json({ message: 'welcome to the api' });
 });
 
 // route to return all users (GET /api/users)
@@ -111,27 +90,9 @@ apiRoutes.get('/users', function(req, res) {
   });
 });   
 
-// apply the routes to our application with the prefix /api
-app.use('/api', apiRoutes);
-
-
-
-
-
-
-
-
-
-
-/*
-
-// default route
-app.get('/', function(req, res) {
-    res.send('The API is not here');
-})
 
 // Show all ETFS
-app.get('/api/etfs', function(req, res) {
+apiRoutes.get('/etfs', function(req, res) {
     // could add optional limit after callback
     Etf.getEtfs(function(err, etfs){
         if(err) {
@@ -143,7 +104,7 @@ app.get('/api/etfs', function(req, res) {
 })
 
 // ADD an ETF
-app.post('/api/etfs', function(req, res) {
+apiRoutes.post('/etfs', function(req, res) {
     var etf = req.body;
     // validate data
     if (!etf.name || !etf.ticker) {
@@ -159,7 +120,7 @@ app.post('/api/etfs', function(req, res) {
 })
 
 // UPDATE an ETF
-app.put('api/efts/:id', function(req, res) {
+apiRoutes.put('/efts/:id', function(req, res) {
     var etf = req.body;
     // delete etf._id
     var id = {
@@ -176,13 +137,14 @@ app.put('api/efts/:id', function(req, res) {
 
 
 // DELETE an ETF
-app.delete('api/efts/:id', function(req, res) {
+apiRoutes.delete('/efts/:id', function(req, res) {
     var id = req.params.id;
     // delete ...
+    res.send("delete etf not done yet");
 });
 
 // Show all advisors
-app.get('/api/advisors', function(req, res) {
+apiRoutes.get('/advisors', function(req, res) {
     Advisor.getAdvisors(function(err, advisors){
         if(err) {
             // could throw(err) for detailed info
@@ -193,7 +155,7 @@ app.get('/api/advisors', function(req, res) {
 })
 
 // ADD an advisor
-app.post('/api/advisors', function(req, res) {
+apiRoutes.post('/advisors', function(req, res) {
     var advisor = req.body;
     if (!advisor.name || !advisor.firm) {
         res.send('Advisor Name and Firm Required');
@@ -209,20 +171,26 @@ app.post('/api/advisors', function(req, res) {
 
 
 // UPDATE an Advisor
-app.put('api/advisors/:id', function(req, res) {
+apiRoutes.put('/advisors/:id', function(req, res) {
     var advisor = req.body;
     var id = req.params.id;
     // put...
+    res.send("update advisor not done yet");
 });
 
 
 // DELETE an Advisor
-app.delete('api/advisors/:id', function(req, res) {
+apiRoutes.delete('/advisors/:id', function(req, res) {
     var id = req.params.id;
     // delete ...
+    res.send("delete advisor not done yet");
 });
 
-*/
+
+// apply the routes to our application with the prefix /api
+app.use('/api', apiRoutes);
+
+
 
 // ---------------------------Start the server--------------------------------------
 // recommended host and port for cloud9
