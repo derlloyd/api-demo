@@ -22,7 +22,7 @@ function getEtfs(callback, limit) {
 
 // show only 1 ETF
 function getEtf(id, callback) {
-    Etf.findOne(id, callback);
+    Etf.findOne(id);
 };
 
 // add new etf function
