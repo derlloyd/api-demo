@@ -20,15 +20,15 @@ function getEtfs(callback, limit) {
     Etf.find(callback).limit(limit);
 };
 
-// add new etf function
-function addEtf(etfObj, callback) {
-    Etf.create(etfObj, callback);
-}
-
 // show only 1 ETF
 function getEtf(id, callback) {
     Etf.findOne(id, callback);
 };
+
+// add new etf function
+function addEtf(etfObj, callback) {
+    Etf.create(etfObj, callback);
+}
 
 // update an ETF
 function updateEtf(id, obj, callback) {
@@ -45,8 +45,8 @@ function deleteEtf(id, callback) {
 module.exports = {
     model: Etf,
     getEtfs: getEtfs,
-    addEtf: addEtf,
     getEtf: getEtf,
+    addEtf: addEtf,
     updateEtf: updateEtf,
     deleteEtf: deleteEtf
 }

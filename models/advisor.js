@@ -20,15 +20,15 @@ function getAdvisors(callback, limit) {
     Advisor.find(callback).limit(limit);
 };
 
-// add new advisor function
-function addAdvisor(advisorObj, callback) {
-    Advisor.create(advisorObj, callback);
-}
-
 // show only 1 Advisor
 function getAdvisor(id, callback) {
     Advisor.findOne(id, callback);
 };
+
+// add new advisor function
+function addAdvisor(advisorObj, callback) {
+    Advisor.create(advisorObj, callback);
+}
 
 // update an Advisor
 function updateAdvisor(id, obj, callback) {
@@ -41,15 +41,12 @@ function deleteAdvisor(id, callback) {
 };
 
 
-
-
-
 // export all
 module.exports = {
     model: Advisor,
     getAdvisors: getAdvisors,
-    addAdvisor: addAdvisor,
     getAdvisor: getAdvisor,
+    addAdvisor: addAdvisor,
     updateAdvisor: updateAdvisor,
     deleteAdvisor: deleteAdvisor
 }
