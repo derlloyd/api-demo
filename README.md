@@ -1,19 +1,21 @@
 # api-demo
 
 
-to access API
+https://api-demo-derlloyd.c9users.io/
 
-POST to /setup
+# to access API
+
+# POST to /setup
 with new req.body.name and req.body.password
 to create a new user
-result {success: true}
+result {success: true, message: 'ok...'}
 
-POST to api/authenticate
+# POST to api/authenticate
 with existing req.body.name and req.body.password
 to get token
 result {
 success: true,
- token: token
+ message: 'ok...', token: token
 }
 
 for all /api routes, now need to input that token
@@ -21,7 +23,7 @@ as req.body.token
 or in the header x-access-token = xxx123
 or as a query /api/whatever?token=xxx123
 
-options:
+# private route options:
 
 Show all users 	(GET 	/api/users)		
 
@@ -36,9 +38,6 @@ Show one Advisor 	(GET 	/api/advisors/:id)
 ADD an advisor 		(POST 	/api/advisors)		
 UPDATE an Advisor 	(PUT 	/api/advisors/:id)
 DELETE an Advisor 	(DELETE /api/advisors/:id)
-
-
-
 
 
 
