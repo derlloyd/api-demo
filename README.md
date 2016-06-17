@@ -1,6 +1,5 @@
 # api-demo
 
-
 https://api-demo-derlloyd.c9users.io/
 
 # to access API
@@ -25,19 +24,19 @@ or as a query /api/whatever?token=xxx123
 
 # private route options:
 
-Show all users 	(GET 	/api/users)		
+*Show all users 	(GET 	/api/users)		
 
-Show all ETFS 	(GET 	/api/etfs)		
-Show one ETF 	(GET 	/api/efts/:id)
-ADD an ETF 	    (POST 	/api/etfs)		
-UPDATE an ETF 	(PUT 	/api/efts/:id)
-DELETE an ETF 	(DELETE /api/efts/:id)
+*Show all ETFS 	(GET 	/api/etfs)
+*Show one ETF 	(GET 	/api/efts/:id)
+*ADD an ETF 	    (POST 	/api/etfs)	
+*UPDATE an ETF 	(PUT 	/api/efts/:id)
+*DELETE an ETF 	(DELETE /api/efts/:id)
 
-Show all Advisors 	(GET 	/api/advisors)		
-Show one Advisor 	(GET 	/api/advisors/:id)
-ADD an advisor 		(POST 	/api/advisors)		
-UPDATE an Advisor 	(PUT 	/api/advisors/:id)
-DELETE an Advisor 	(DELETE /api/advisors/:id)
+*Show all Advisors 	(GET 	/api/advisors)		
+*Show one Advisor 	(GET 	/api/advisors/:id)
+*ADD an advisor 		(POST 	/api/advisors)		
+*UPDATE an Advisor 	(PUT 	/api/advisors/:id)
+*DELETE an Advisor 	(DELETE /api/advisors/:id)
 
 
 
