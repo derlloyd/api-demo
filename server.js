@@ -33,16 +33,18 @@ app.use(morgan('dev'));
 // default route
 app.get('/', function(req, res) {
   // could create an page to provide this info
-  res.send("go to /setup to create account and /api/authenticate for access token")
+  res.status(200).json({
+      message: 'POST to /setup to create account or POST to /api/authenticate for token'
+    });
 });
 
 
 // to create a new user
 app.post('/setup', function(req, res) {
-  // validate data, if missing name and password, send fail message
+  // validate data, if missing name and password, send fail message, status 400, client error
   if (!req.body.name || !req.body.password) {
     
-    res.json({
+    res.status(400).json({
       success: false,
       message: 'Name and Password Required'
     });
@@ -58,7 +60,7 @@ app.post('/setup', function(req, res) {
   User.findOne({name: name}, function(err, user) {
     if (err) throw err;
     if (user) {
-      res.json({
+      res.status(400).json({
       success: false,
       message: 'User already exists'
     });
@@ -74,7 +76,7 @@ app.post('/setup', function(req, res) {
   
     newUser.save(function(err) {
       if (err) throw err;
-      res.json({
+      res.status(200).json({
         success: true,
         message: 'User created. POST login info to /api/authenticate for token'
       });
@@ -98,29 +100,28 @@ apiRoutes.post('/authenticate', function(req, res) {
     if (err) throw err;
 
     if (!user) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: 'Authentication failed. User not found.'
       });
     }
     else if (user) {
       // check if password matches, TODO use bcrypt to verify hashed *****************
-
+      // user.password should already be hashed
       if (user.password != req.body.password) {
-        return res.json({
+        return res.status(400).json({
           success: false,
           message: 'Authentication failed. Wrong password.'
         });
       }
       else {
-        // if user is found and password is right
-        // create a token
+        // if user is found and password is right, create a token
         var token = jwt.sign(user, app.get('mySecret'));
 
-        // return the token as JSON
-        return res.json({
+        // return the token in JSON
+        return res.status(200).json({
           success: true,
-          message: 'Authentication success! Token created',
+          message: 'Authentication successful! Token created',
           token: token
         });
       }
@@ -143,7 +144,7 @@ apiRoutes.use(function(req, res, next) {
     // verifies secret
     jwt.verify(token, app.get('mySecret'), function(err, decoded) {      
       if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+        return res.status(400).json({ success: false, message: 'Failed to authenticate token.' });    
       } else {
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;    
@@ -155,7 +156,7 @@ apiRoutes.use(function(req, res, next) {
 
     // if there is no token
     // return an error, 403 forbidden, not allowed to view data
-    return res.status(403).send({ 
+    return res.status(403).json({ 
         success: false, 
         message: 'No token provided.' 
     });
@@ -172,7 +173,8 @@ apiRoutes.use(function(req, res, next) {
 apiRoutes.get('/users', function(req, res) {
   User.find({}, function(err, users) {
     if (err) throw err;
-    return res.json(users);
+    // there will always be at least 1 user
+    return res.status(200).json(users);
   });
 });
 
@@ -180,13 +182,12 @@ apiRoutes.get('/users', function(req, res) {
 
 // Show all ETFS (GET /api/etfs)
 apiRoutes.get('/etfs', function(req, res) {
-  // could add optional limit after callback
+  // can add optional limit after callback
   Etf.getEtfs(function(err, etfs) {
     if (err) {
-      // could throw(err) for detailed info
-      return res.send('Error retrieving ETFs');
+      return res.status(500).json({success: false, message: 'Error retrieving ETFs'});
     }
-    res.json(etfs);
+    res.status(200).json(etfs);
   })
 })
 
@@ -195,12 +196,13 @@ apiRoutes.get('/etfs/:id', function(req, res) {
   var id = {
     _id: req.params.id
   };
-  // res.json(id)
+  // res.json(id) // why not working **********************************
+  
   Etf.getEtf(id, function(err, etf) {
     if (err) {
-      return res.send('Error retrieving ETF');
+      return res.status(500).json({success: false, message: 'Error retrieving ETF'});
     }
-    res.json(etf);
+    res.status(200).json(etf);
   })
 });
 
@@ -209,14 +211,17 @@ apiRoutes.post('/etfs', function(req, res) {
   var etf = req.body;
   // validate data
   if (!etf.name || !etf.ticker) {
-    return res.send('Name and Ticker Required');
+    return res.status(400).json({success: false, message: 'Name and Ticker Required'});
   }
   Etf.addEtf(etf, function(err, etf) {
     if (err) {
-      // throw(err) for detailed info
-      return res.send('Error creating ETF');
+      return res.status(500).json({success: false, message: 'Error creating ETF'});
     }
-    res.json(etf);
+    res.status(200).json({
+      success: true,
+      message: 'ETF created.',
+      etf: etf
+    });
   })
 })
 
@@ -231,9 +236,9 @@ apiRoutes.put('/etfs/:id', function(req, res) {
 
   Etf.updateEtf(id, etf, function(err, etf) {
     if (err) {
-      return res.send('Error updating ETF');
+      return res.status(500).json({success: false, message: 'Error updating ETF'});
     }
-    res.json(etf);
+    return res.status(200).json({success: true, message: 'ETF updated'});
   })
 });
 
@@ -242,9 +247,9 @@ apiRoutes.delete('/etfs/:id', function(req, res) {
   var id = req.params.id;
   Etf.deleteEtf(id, function(err, deleted) {
     if (err) {
-      return res.send('Error deleting ETF');
+      return res.status(500).json({success: false, message: 'Error deleting ETF'});
     }
-    res.json(deleted);
+    return res.status(200).json({success: true, message: 'ETF deleted'});
   })
 });
 
@@ -254,9 +259,9 @@ apiRoutes.delete('/etfs/:id', function(req, res) {
 apiRoutes.get('/advisors', function(req, res) {
   Advisor.getAdvisors(function(err, advisors) {
     if (err) {
-      return res.send('Error retrieving advisors');
+      return res.status(500).json({success: false, message: 'Error retrieving advisors'});
     }
-    res.json(advisors);
+    res.status(200).json(advisors);
   })
 })
 
@@ -267,9 +272,9 @@ apiRoutes.get('/advisors/:id', function(req, res) {
   var id = req.params.id;
   Etf.updateAdvisor(id, advisor, function(err, advisor) {
     if (err) {
-      return res.send('Error updating Advisor');
+      return res.status(500).json({success: false, message: 'Error updating advisor'});
     }
-    res.json(advisor);
+    res.status(200).json(advisor);
   })
 });
 
@@ -277,14 +282,17 @@ apiRoutes.get('/advisors/:id', function(req, res) {
 apiRoutes.post('/advisors', function(req, res) {
   var advisor = req.body;
   if (!advisor.name || !advisor.firm) {
-    return res.send('Advisor Name and Firm Required');
+    return res.status(400).json({success: false, message: 'Advisor Name and Firm Required'});
   }
   Advisor.addAdvisor(advisor, function(err, advisor) {
     if (err) {
-      // throw(err) for detailed info
-      return res.send('Error creating advisor');
+      return res.status(500).json({success: false, message: 'Error creating advisor'});
     }
-    res.json(advisor);
+    res.status(200).json({
+      success: true,
+      message: 'Advisor created',
+      advisor: advisor
+    });
   })
 })
 
@@ -295,9 +303,9 @@ apiRoutes.put('/advisors/:id', function(req, res) {
   var id = req.params.id;
   Etf.updateAdvisor(id, advisor, function(err, advisor) {
     if (err) {
-      return res.send('Error updating Advisor');
+      return res.status(500).json({success: false, message: 'Error updating advisor'});
     }
-    res.json(advisor);
+    return res.status(200).json({success: true, message: 'Advisor updated'});
   })
 });
 
@@ -306,9 +314,9 @@ apiRoutes.delete('/advisors/:id', function(req, res) {
   var id = req.params.id;
   Etf.deleteAdvisor(id, function(err, deleted) {
     if (err) {
-      return res.send('Error deleting Advisor');
+      return res.status(500).json({success: false, message: 'Error deleting advisor'});
     }
-    res.json(deleted);
+    return res.status(200).json({success: true, message: 'Advisor deleted'});
   })
 });
 
