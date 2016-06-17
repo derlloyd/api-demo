@@ -1,8 +1,14 @@
 var mongoose = require('mongoose');
 
 var userSchema = mongoose.Schema({
-    name: String,
-    password: String
+    name: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
 })
 // TODO hash the password using bcrypt
 

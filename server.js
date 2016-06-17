@@ -38,24 +38,48 @@ app.get('/', function(req, res) {
 
 
 // to create a new user
-app.get('/setup', function(req, res) {
+app.post('/setup', function(req, res) {
+  // validate data, if missing name and password, send fail message
+  if (!req.body.name || !req.body.password) {
+    
+    res.json({
+      success: false,
+      message: 'Name and Password Required'
+    });
+    
+    return;
+  }
+  
   // get name and password from req.body
   var name = req.body.name;
   var password = req.body.password;
   
-  // TODO need to verify if username already exists, if so res.send('User already exists') *******
-  
-  var newUser = new User({
-    name: name,
-    password: password
-  })
-
-  newUser.save(function(err) {
+  // check if the user exists
+  User.findOne({name: name}, function(err, user) {
     if (err) throw err;
-    res.json({
-      success: true
+    if (user) {
+      res.json({
+      success: false,
+      message: 'User already exists'
     });
-  })
+    
+    return;
+    }
+    // the user does not exist, proceed with setup
+    // data validated, not duplicate, so create and save new user  ********TODO hash password*********
+    var newUser = new User({
+      name: name,
+      password: password
+    });
+  
+    newUser.save(function(err) {
+      if (err) throw err;
+      res.json({
+        success: true,
+        message: 'User created. POST login info to /api/authenticate for token'
+      });
+    })
+  });
 })
 
 // ------------------------------PUBLIC API ROUTE HANDLERS--------------------------------------
@@ -96,6 +120,7 @@ apiRoutes.post('/authenticate', function(req, res) {
         // return the token as JSON
         return res.json({
           success: true,
+          message: 'Authentication success! Token created',
           token: token
         });
       }
@@ -170,7 +195,7 @@ apiRoutes.get('/etfs/:id', function(req, res) {
   var id = {
     _id: req.params.id
   };
-  res.json(id)
+  // res.json(id)
   Etf.getEtf(id, function(err, etf) {
     if (err) {
       return res.send('Error retrieving ETF');
@@ -184,8 +209,7 @@ apiRoutes.post('/etfs', function(req, res) {
   var etf = req.body;
   // validate data
   if (!etf.name || !etf.ticker) {
-    res.send('Name and Ticker Required');
-    return;
+    return res.send('Name and Ticker Required');
   }
   Etf.addEtf(etf, function(err, etf) {
     if (err) {

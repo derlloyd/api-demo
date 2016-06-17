@@ -1,4 +1,51 @@
 # api-demo
+
+
+to access API
+
+POST to /setup
+with new req.body.name and req.body.password
+to create a new user
+result {success: true}
+
+POST to api/authenticate
+with existing req.body.name and req.body.password
+to get token
+result {
+success: true,
+ token: token
+}
+
+for all /api routes, now need to input that token
+as req.body.token
+or in the header x-access-token = xxx123
+or as a query /api/whatever?token=xxx123
+
+options:
+
+Show all users 	(GET 	/api/users)		
+
+Show all ETFS 	(GET 	/api/etfs)		
+Show one ETF 	(GET 	/api/efts/:id)
+ADD an ETF 	    (POST 	/api/etfs)		
+UPDATE an ETF 	(PUT 	/api/efts/:id)
+DELETE an ETF 	(DELETE /api/efts/:id)
+
+Show all Advisors 	(GET 	/api/advisors)		
+Show one Advisor 	(GET 	/api/advisors/:id)
+ADD an advisor 		(POST 	/api/advisors)		
+UPDATE an Advisor 	(PUT 	/api/advisors/:id)
+DELETE an Advisor 	(DELETE /api/advisors/:id)
+
+
+
+
+
+
+
+
+
+
 API with authentication, 2 collections + web app
 
 
